@@ -1,0 +1,5 @@
+#[ansible1]
+#ansible-1 ansible_ssh_host=inteliventi.com ansible_ssh_user=user
+
+[ansible3]
+ansible-3 ansible_ssh_host=inteliventi.com ansible_ssh_user=root

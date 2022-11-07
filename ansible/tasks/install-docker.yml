@@ -1,0 +1,47 @@
+---
+
+-  name: 3 install docker
+   ansible.builtin.command: 
+     cmd: mkdir -p /etc/apt/keyrings
+     creates: /etc/apt/keyrings
+
+-  name: 4 install docker
+   ansible.builtin.get_url:
+     url: https://download.docker.com/linux/ubuntu/gpg
+     dest: /etc/apt/keyrings/docker.asc
+     mode: '0644'
+     force: true
+
+-  name: 5 install docker
+   ansible.builtin.apt_repository:
+     repo: deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable
+     state: present
+
+-  name: 6 install docker
+   ansible.builtin.shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu  jammy stable"
+   args:
+     executable: /bin/bash
+
+-  name: 7 install docker
+   apt:
+     update_cache: yes
+     pkg:
+     - docker-ce
+     - docker-ce-cli
+     - containerd.io
+     - docker-compose-plugin
+    
+- name: 8 Add "user" to group "docker"
+  ansible.builtin.user:
+    name: user
+    groups: docker
+    shell: /bin/bash
+    comment: "user"
+    state: present
+  become: yes
+
+- name: 9 unmask docker
+  ansible.builtin.shell: systemctl unmask docker
+
+- name: 10 start docker
+  ansible.builtin.shell: systemctl start docker

@@ -1,0 +1,2 @@
+[ansible2]
+ansible-2 ansible_ssh_host=besureman.ru ansible_ssh_user=root

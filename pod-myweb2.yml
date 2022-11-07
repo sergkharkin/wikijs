@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myweb2
+spec:
+  containers:
+    - name: container-k8sphp
+      image: sergkharkin/k8sphp:latest
+      ports:
+        - containerPort: 80

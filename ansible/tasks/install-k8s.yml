@@ -1,0 +1,30 @@
+---
+
+- name: 11 install kubernetes
+  apt:
+    update_cache: yes
+    pkg:
+    - apt-transport-https
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin
+
+- name: 12 install kubernetes
+  ansible.builtin.shell: 
+    cmd: curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: 13 install kubernetes
+  ansible.builtin.shell: 
+    cmd: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+- name: 14 install kubernetes
+  apt:
+    update_cache: yes
+    pkg:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: 15 install kubernetes
+  ansible.builtin.shell: 
+    cmd: apt-mark hold kubelet kubeadm kubectl

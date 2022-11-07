@@ -1,0 +1,7 @@
+---
+
+- name: 2 install java
+  apt:
+    update_cache: yes
+    pkg:
+      - openjdk-11-jdk

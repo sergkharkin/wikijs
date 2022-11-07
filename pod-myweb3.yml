@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myweb3
+  labels:
+    env: prod
+    app: main
+    tier: frontend
+    owner: SergeyKharkin
+spec:
+  containers:
+    - name: container-k8sphp
+      image: nginx:latest
+      ports:
+        - containerPort: 80

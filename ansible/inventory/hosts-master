@@ -1,0 +1,3 @@
+
+[ansible4]
+ansible-4 ansible_ssh_host=master.sergkharkin.ru ansible_ssh_user=root
