@@ -4,23 +4,35 @@ metadata:
   name: ingress-hosts
 spec:
   rules:
-  - host: inteliventi.com
+  - host: "inteliventi.com"
     http:
       paths:
-        - backend:
-            serviceName: main
-            servicePort: 80
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: main
+            port:
+              number: 80
 
-  - host: besureman.ru
+  - host: "besureman.ru"
     http:
       paths:
-        - backend:
-            serviceName: web1
-            servicePort: 80  
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: web1
+            port:
+              number: 80
 
-  - host: vpn1.inteliventi.com
+  - host: "vpn1.inteliventi.com"
     http:
       paths:
-        - backend:
-            serviceName: tomcat
-            servicePort: 8080
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: tomcat
+            port:
+              number: 8080
