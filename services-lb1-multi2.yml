@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-hello
+  labels:
+    app: nginx-hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: nginx-hello
+  template:
+    metadata:
+      labels:
+        project: nginx-hello
+    spec:
+      containers:
+      - name: nginx-hello
+        image: sergkharkin/k8sphp:latest
+        ports:
+        - containerPort: 80
+
+      - name: my-tomcat
+        image: tomcat:8.5.38
+        ports:
+          - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    env: prod
+    owner: SergeyKharkin
+  name: nginx-hello
+spec:
+  type: LoadBalancer
+  selector:
+    project: nginx-hello 
+  ports:
+  - name: http-listener
+    port: 80
+    targetPort: 80       
+
+  - name: http8080-listener
+    port: 8888
+    targetPort: 8080
