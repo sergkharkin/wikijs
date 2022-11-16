@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+
+spec:
+  rules:
+  - host: inteliventi.com
+    http:
+      paths:
+        - backend:
+            serviceName: main
+            servicePort: 80
+
+  - host: besureman.ru
+    http:
+      paths:
+        - backend:
+            serviceName: web1
+            servicePort: 80  
+
+  - host: vpn1.inteliventi.com
+    http:
+      paths:
+        - backend:
+            serviceName: tomcat
+            servicePort: 8080
