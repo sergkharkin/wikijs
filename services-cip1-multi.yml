@@ -17,11 +17,19 @@ spec:
       containers:
       - name: nginx-hello
         image: sergkharkin/k8sphp:latest
+        resources:
+          limits:
+            memory: 400Mi
+            cpu: 300m
         ports:
         - containerPort: 80
 
       - name: my-tomcat
         image: tomcat:8.5.38
+        resources:
+          limits:
+            memory: 800Mi
+            cpu: 1
         ports:
           - containerPort: 8080
 
