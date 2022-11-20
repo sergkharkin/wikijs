@@ -1,0 +1,83 @@
+---
+
+- name: Setting up our VMs
+  gather_facts: true
+  hosts: ansible-m, ansible-w1, ansible-w2, ansible-w3
+  become: yes
+
+  tasks:
+
+    - name: Create group "user"
+      ansible.builtin.group:
+        name: user
+        state: present
+        gid: 1400
+      become: yes
+
+    - name: Add user "user"
+      ansible.builtin.user:
+        name: user
+        home: /home/user
+        groups: user,sudo
+        shell: /bin/bash
+        comment: "user"
+        state: present
+        uid: 1500
+      become: yes
+
+    - name: Create .ssh directory
+      file:
+        path: /home/user/.ssh
+        state: directory
+      become: yes
+
+    - name: Add user to the sudoers
+      copy:
+        dest: "/etc/sudoers.d/user"
+        content: |
+          user ALL = NOPASSWD: ALL
+          user ALL = (ALL) NOPASSWD:ALL
+      become: yes
+
+    - name: Add local SSH key
+      copy:
+        dest: "/home/user/.ssh/authorized_keys"
+        content:
+         ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDJacy//wWjwgexz2YmqWVfltZPhNMqc893CvlcWxJRAxLGi0APW7LvcZMh6BqQu0R99VAm83ypm2ZSMoTT8pMu5+uuUjfCXT/vsr+LLiyx3PtaAJd0clSHumKDx9yrsNmq/Bq0Qtkdrhwx05WZjSXO2H+j6VPcKAfqvdYy7P4KK2hjf2n+r2pKZzG3JRjy6UsGp52meojgkIIP8xE9rPHM71fNOKBNFttpSJG5ca+akDqIwVZbd8k+W+CfzP9wXME1ZtEeBowt2OIbJllGOcZaIC5cLc2Gg97G8blmQXKiWhBrL0/JP5vPpvtLrllL0eO60FbdS4iVlLKD639jSBI1FDQIRgDAiSEKRzS0l9rHR2m1pT33BZszOcfdX7sFeyozqhW/kA5zeXghLfMmFhM5r2T2ArBSSuOGGYHIcmx+CnuvUrwJylnoEqx6OG8982kPybZo7RqY6y3CWh5zGcSPDSrhXuPFZRHClzbJ/jJni52YyYUqzWiw8Te59zpZDpU= veselchak@debian
+      become: yes
+
+    - name: 1 install ayuda
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - curl
+        - wget
+        - unzip
+        - zip
+        - ca-certificates
+        - gnupg
+        - lsb-release
+        state: present
+
+    - include: ../tasks/install-java.yml
+    - include: ../tasks/install-docker.yml
+    - include: ../tasks/install-k8s.yml
+
+    - name: update
+      apt: update_cache=yes
+      become: yes 
+   
+    #- name: disable_root_login
+    #  ansible.builtin.lineinfile:
+    #    path: /etc/ssh/sshd_config
+    #    regexp: '^PermitRootLogin'
+    #    line: "PermitRootLogin no"
+    #    state: present
+    #    backup: yes
+
+  handlers:
+    - name: restart sshd
+      ansible.builtin.service:
+        name: = sshd
+        state: restarted
+

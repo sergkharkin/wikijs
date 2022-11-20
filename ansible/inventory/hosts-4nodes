@@ -1,0 +1,12 @@
+
+[ansibleM]
+ansible-m ansible_ssh_host=master.sergkharkin.ru ansible_ssh_user=root
+
+[ansibleW1]
+ansible-w1 ansible_ssh_host=worker1.sergkharkin.ru ansible_ssh_user=root
+
+[ansibleW2]
+ansible-w2 ansible_ssh_host=worker2.sergkharkin.ru ansible_ssh_user=root
+
+[ansibleW3]
+ansible-w3 ansible_ssh_host=worker3.sergkharkin.ru ansible_ssh_user=root
