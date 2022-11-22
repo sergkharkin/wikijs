@@ -1,8 +1,8 @@
----
+---                       
 
 - name: Setting up our VMs
   gather_facts: true
-  hosts: ansible-m, ansible-w1, ansible-w2, ansible-w3
+  hosts: ansible-m , ansible-w1, ansible-w2, ansible-w3
   become: yes
 
   tasks:
@@ -23,28 +23,29 @@
         comment: "user"
         state: present
         uid: 1500
-      become: yes
+      #become: yes
 
     - name: Create .ssh directory
-      file:
+      ansible.builtin.file:
         path: /home/user/.ssh
         state: directory
-      become: yes
-
-    - name: Add user to the sudoers
-      copy:
-        dest: "/etc/sudoers.d/user"
-        content: |
-          user ALL = NOPASSWD: ALL
-          user ALL = (ALL) NOPASSWD:ALL
-      become: yes
-
-    - name: Add local SSH key
-      copy:
+        owner: user
+        group: user
+      #become: yes
+   
+    - name: Add SSH key for user
+      ansible.builtin.copy:
         dest: "/home/user/.ssh/authorized_keys"
         content:
-         ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDJacy//wWjwgexz2YmqWVfltZPhNMqc893CvlcWxJRAxLGi0APW7LvcZMh6BqQu0R99VAm83ypm2ZSMoTT8pMu5+uuUjfCXT/vsr+LLiyx3PtaAJd0clSHumKDx9yrsNmq/Bq0Qtkdrhwx05WZjSXO2H+j6VPcKAfqvdYy7P4KK2hjf2n+r2pKZzG3JRjy6UsGp52meojgkIIP8xE9rPHM71fNOKBNFttpSJG5ca+akDqIwVZbd8k+W+CfzP9wXME1ZtEeBowt2OIbJllGOcZaIC5cLc2Gg97G8blmQXKiWhBrL0/JP5vPpvtLrllL0eO60FbdS4iVlLKD639jSBI1FDQIRgDAiSEKRzS0l9rHR2m1pT33BZszOcfdX7sFeyozqhW/kA5zeXghLfMmFhM5r2T2ArBSSuOGGYHIcmx+CnuvUrwJylnoEqx6OG8982kPybZo7RqY6y3CWh5zGcSPDSrhXuPFZRHClzbJ/jJni52YyYUqzWiw8Te59zpZDpU= veselchak@debian
-      become: yes
+          ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDJacy//wWjwgexz2YmqWVfltZPhNMqc893CvlcWxJRAxLGi0APW7LvcZMh6BqQu0R99VAm83ypm2ZSMoTT8pMu5+uuUjfCXT/vsr+LLiyx3PtaAJd0clSHumKDx9yrsNmq/Bq0Qtkdrhwx05WZjSXO2H+j6VPcKAfqvdYy7P4KK2hjf2n+r2pKZzG3JRjy6UsGp52meojgkIIP8xE9rPHM71fNOKBNFttpSJG5ca+akDqIwVZbd8k+W+CfzP9wXME1ZtEeBowt2OIbJllGOcZaIC5cLc2Gg97G8blmQXKiWhBrL0/JP5vPpvtLrllL0eO60FbdS4iVlLKD639jSBI1FDQIRgDAiSEKRzS0l9rHR2m1pT33BZszOcfdX7sFeyozqhW/kA5zeXghLfMmFhM5r2T2ArBSSuOGGYHIcmx+CnuvUrwJylnoEqx6OG8982kPybZo7RqY6y3CWh5zGcSPDSrhXuPFZRHClzbJ/jJni52YyYUqzWiw8Te59zpZDpU= veselchak@debian
+        owner: user
+        group: user
+
+    #- name: Host name
+    #  ansible.builtin.shell: hostnamectl set-hostname master
+    #  args:
+    #    executable: /bin/bash
+    #  become: yes
 
     - name: 1 install ayuda
       ansible.builtin.apt:
@@ -81,3 +82,34 @@
         name: = sshd
         state: restarted
 
+- name: Setting hostname M
+  hosts: ansible-m
+  tasks:
+    - name: MASTER naming
+      ansible.builtin.shell: hostnamectl set-hostname master
+      args:
+        executable: /bin/bash
+
+- name: Setting hostname W1
+  hosts: ansible-w1
+  tasks:
+    - name: MASTER naming
+      ansible.builtin.shell: hostnamectl set-hostname worker1
+      args:
+        executable: /bin/bash
+
+- name: Setting hostname W2
+  hosts: ansible-w2
+  tasks:
+    - name: MASTER naming
+      ansible.builtin.shell: hostnamectl set-hostname worker2
+      args:
+        executable: /bin/bash
+
+- name: Setting hostname W3
+  hosts: ansible-w3
+  tasks:
+    - name: MASTER naming
+      ansible.builtin.shell: hostnamectl set-hostname worker3
+      args:
+        executable: /bin/bash 
